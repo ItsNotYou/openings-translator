@@ -1,5 +1,7 @@
 package de.unipotsdam.elis;
 
+import de.unipotsdam.elis.health.TemplateHealthCheck;
+import de.unipotsdam.elis.resources.HelloWorldResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -22,6 +24,7 @@ public class OpeningsTranslatorApplication extends Application<OpeningsTranslato
 
 	@Override
 	public void run(final OpeningsTranslatorConfiguration configuration, final Environment environment) {
-		// TODO: implement application
+		environment.jersey().register(new HelloWorldResource(configuration.getTemplate(), configuration.getDefaultName()));
+		environment.healthChecks().register("template", new TemplateHealthCheck(configuration.getTemplate()));
 	}
 }
