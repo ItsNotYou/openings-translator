@@ -43,4 +43,10 @@ public class TimeInterpreterTest {
 		String result = sut.translate("Fr:             09:00 - 18:00");
 		assertEquals("Fr 09:00-18:00; PH off", result);
 	}
+
+	@Test
+	public void shouldTranslateClosedNotice() throws Exception {
+		String result = sut.translate("Sa:            geschlossen");
+		assertEquals("Sa off; PH off", result);
+	}
 }
