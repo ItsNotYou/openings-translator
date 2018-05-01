@@ -8,15 +8,27 @@ import java.util.regex.Pattern;
 
 public class TimeInterpreter {
 
+	public String translate(List<String> informalHours) throws UnknownFormatException {
+		StringBuffer result = new StringBuffer();
+		for (String line : informalHours) {
+			result.append(translateLine(line)).append("; ");
+		}
+		return result.append("PH off").toString();
+	}
+
 	public String translate(String informalHours) throws UnknownFormatException {
+		String shortened = translateLine(informalHours);
+		return shortened + "; PH off";
+	}
+
+	private String translateLine(String informalHours) throws UnknownFormatException {
 		// Remove white spaces
 		String shortened = informalHours.replaceAll("\\s", "");
 
 		shortened = removeColonAfterDays(shortened, informalHours);
 		shortened = translateDayPart(shortened, informalHours);
 		shortened = translateCommentPart(shortened, informalHours);
-
-		return shortened + "; PH off";
+		return shortened;
 	}
 
 	private String removeColonAfterDays(String noWhiteSpaces, String original) throws UnknownFormatException {

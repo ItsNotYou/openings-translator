@@ -3,6 +3,8 @@ package de.unipotsdam.elis.core;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,5 +50,11 @@ public class TimeInterpreterTest {
 	public void shouldTranslateClosedNotice() throws Exception {
 		String result = sut.translate("Sa:            geschlossen");
 		assertEquals("Sa off; PH off", result);
+	}
+
+	@Test
+	public void shouldTranslateMultipleLines() throws Exception {
+		String result = sut.translate(Arrays.asList("Mo - Do:  09:00 - 22:00", "Fr:             09:00 - 18:00", "Sa:            09:00 - 18:00", "So:           geschlossen"));
+		assertEquals("Mo-Th 09:00-22:00; Fr 09:00-18:00; Sa 09:00-18:00; Su off; PH off", result);
 	}
 }
