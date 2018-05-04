@@ -2,5 +2,5 @@ logging:
   level: INFO
   loggers:
     de.unipotsdam.elis: DEBUG
-template: Hello, %s!
-defaultName: Stranger
+jerseyClient:
+  timeout: 2000ms

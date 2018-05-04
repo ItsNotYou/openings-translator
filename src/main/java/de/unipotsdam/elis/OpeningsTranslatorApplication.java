@@ -1,8 +1,13 @@
 package de.unipotsdam.elis;
 
-import de.unipotsdam.elis.health.TemplateHealthCheck;
-import de.unipotsdam.elis.resources.HelloWorldResource;
+import javax.ws.rs.client.Client;
+
+import de.unipotsdam.elis.client.OpeningPagesClient;
+import de.unipotsdam.elis.core.TimeRetriever;
+import de.unipotsdam.elis.health.OpeningPagesHealthCheck;
+import de.unipotsdam.elis.resources.UpdateResource;
 import io.dropwizard.Application;
+import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -14,17 +19,20 @@ public class OpeningsTranslatorApplication extends Application<OpeningsTranslato
 
 	@Override
 	public String getName() {
-		return "openings translator";
+		return "openings-translator";
 	}
 
 	@Override
 	public void initialize(final Bootstrap<OpeningsTranslatorConfiguration> bootstrap) {
-		// TODO: application initialization
 	}
 
 	@Override
-	public void run(final OpeningsTranslatorConfiguration configuration, final Environment environment) {
-		environment.jersey().register(new HelloWorldResource(configuration.getTemplate(), configuration.getDefaultName()));
-		environment.healthChecks().register("template", new TemplateHealthCheck(configuration.getTemplate()));
+	public void run(final OpeningsTranslatorConfiguration config, final Environment environment) {
+		Client client = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration()).build(getName());
+		OpeningPagesClient pagesClient = new OpeningPagesClient(client);
+		TimeRetriever times = new TimeRetriever(pagesClient);
+
+		environment.jersey().register(new UpdateResource(times));
+		environment.healthChecks().register("opening-pages", new OpeningPagesHealthCheck(pagesClient));
 	}
 }
