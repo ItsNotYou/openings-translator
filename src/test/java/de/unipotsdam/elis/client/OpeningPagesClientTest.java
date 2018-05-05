@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class OpeningPagesClientTest {
@@ -19,13 +18,13 @@ public class OpeningPagesClientTest {
 		this.sut = new OpeningPagesClient(null);
 	}
 
-	@Ignore
 	@Test
 	public void shouldFindLinesForNeuesPalais() throws Exception {
 		InputStream page = this.getClass().getClassLoader().getResourceAsStream("opening-pages/mensa-am-neuen-palais.html");
 		List<String> result = sut.extractOpeningLines(page);
 
-		assertEquals(1, result.size());
-		assertEquals("Montag - Freitag: 10.00 - 15.00 Uhr", result.get(0));
+		assertEquals(2, result.size());
+		assertEquals("Montag - Donnerstag:08.00 - 18.00 Uhr", result.get(0));
+		assertEquals("Freitag:08.00 - 14.30 Uhr", result.get(1));
 	}
 }

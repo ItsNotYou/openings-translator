@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 
+import org.htmlcleaner.BaseToken;
+import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
@@ -32,26 +35,48 @@ public class OpeningPagesClient {
 	}
 
 	List<String> extractOpeningLines(InputStream stream) throws IOException {
-		TagNode rootNode = new HtmlCleaner().clean(stream);
+		StringBuilder buffer = new StringBuilder();
+
+		TagNode tagNode = new HtmlCleaner().clean(stream);
 		try {
-			// Object[] nodes = rootNode.evaluateXPath("//div[@id='c1063']");
-			Object[] nodes = rootNode.evaluateXPath("//div[@class]");
-			if (nodes.length == 0) {
-				// TODO throw error
-				System.err.println("No node found");
-			} else if (nodes.length >= 2) {
-				// TODO throw error
+			Object[] result = tagNode.evaluateXPath("//div[@id='c1064']");
+			if (result.length == 0) {
+				// TODO
+				System.err.println("Not enough nodes");
+			} else if (result.length >= 2) {
+				// TODO
 				System.err.println("Too many nodes");
+			} else if (!(result[0] instanceof TagNode)) {
+				// TODO
+				System.err.println("Wrong node");
 			} else {
-				TagNode div = (TagNode) nodes[0];
-				System.out.println(div);
+				extractContent((TagNode) result[0], buffer);
 			}
 		} catch (XPatherException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return Arrays.asList();
+		return Arrays.asList(buffer.toString().trim().split("\\n")).stream().map(x -> x.trim()).collect(Collectors.toList());
+	}
+
+	/**
+	 * Extracts {@link ContentNode} content recursively
+	 * 
+	 * @param node
+	 *            Start node
+	 * @param buffer
+	 *            Target buffer
+	 */
+	private static void extractContent(final TagNode node, final StringBuilder buffer) {
+		for (BaseToken b : node.getAllChildren()) {
+			if (b instanceof ContentNode) {
+				ContentNode c = (ContentNode) b;
+				buffer.append(c.getContent());
+			} else if (b instanceof TagNode) {
+				extractContent((TagNode) b, buffer);
+			}
+		}
 	}
 
 	public List<String> readCanteenOpening() throws IOException {
