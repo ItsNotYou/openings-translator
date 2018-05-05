@@ -51,11 +51,18 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- HTML Retrieval -->
+		<!-- HTML retrieval -->
 		<dependency>
 			<groupId>net.sourceforge.htmlcleaner</groupId>
 			<artifactId>htmlcleaner</artifactId>
 			<version>2.22</version>
+		</dependency>
+
+		<!-- Opening hours parser -->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.7.1</version>
 		</dependency>
 	</dependencies>
 
@@ -135,6 +142,21 @@
 						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Plugin to compile the g4 files ahead of the java files. To use this 
+				plugin, type: "mvn antlr4:antlr4" In any case, Maven will invoke this plugin 
+				before the Java source is compiled -->
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>4.7</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>antlr4</goal>
 						</goals>
 					</execution>
 				</executions>
