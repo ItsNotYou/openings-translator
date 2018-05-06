@@ -1,10 +1,25 @@
 grammar InformalOpeningHours;
 
-openings : line ('\n' line)* ;
+openings : LB* line (LB* line)* LB*;
 
-line : DAY('-'DAY)? ':' TIME'-'TIME 'Uhr'? ;
+line : day_part COLON time_part ;
 
-TIME : [0-9][0-9](':'|'.')[0-9][0-9] ;
+day_part : day (day_span_separator day)? ;
+day : DAY ;
+day_span_separator : HYPHEN ;
+
+time_part           : time time_span_separator time 'Uhr'? ;
+time                : hour time_part_separator minute ;
+hour                : TIME_DIGIT ;
+minute              : TIME_DIGIT ;
+time_part_separator : COLON | POINT ;
+time_span_separator : HYPHEN ;
+
+TIME_DIGIT : [0-9] [0-9] ;
+COLON      : ':' ;
+POINT      : '.' ;
+HYPHEN     : '-' ;
+LB         : '\n' ;
 
 DAY :
 	'Mo'('ntag' | 'nday')? |
