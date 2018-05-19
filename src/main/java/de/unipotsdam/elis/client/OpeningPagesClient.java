@@ -15,13 +15,19 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
 
-public class OpeningPagesClient {
+import de.unipotsdam.elis.OpeningsParserConfig;
+
+public class OpeningPagesClient implements OpeningsPageClient {
 
 	private static final String MENSA_AM_NEUEN_PALAIS = "http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html";
 
 	private final Client client;
 
 	public OpeningPagesClient(Client client) {
+		this.client = client;
+	}
+
+	public OpeningPagesClient(Client client, OpeningsParserConfig config) {
 		this.client = client;
 	}
 
@@ -86,5 +92,11 @@ public class OpeningPagesClient {
 		}
 
 		return extractOpeningLines((InputStream) response.getEntity());
+	}
+
+	@Override
+	public String readOpeningLines() throws IOException {
+		List<String> result = readCanteenOpening();
+		return result.stream().reduce((a, b) -> a + "\n" + b).get();
 	}
 }

@@ -4,3 +4,7 @@ logging:
     de.unipotsdam.elis: DEBUG
 jerseyClient:
   timeout: 2000ms
+openingParsers:
+  - url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
+    className: de.unipotsdam.elis.client.CanteenClient
+    searchId: c1063
