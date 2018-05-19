@@ -8,3 +8,6 @@ openingParsers:
   - url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
     className: de.unipotsdam.elis.client.CanteenClient
     searchId: c1063
+  - url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
+    className: de.unipotsdam.elis.client.CanteenClient
+    searchId: c1064
