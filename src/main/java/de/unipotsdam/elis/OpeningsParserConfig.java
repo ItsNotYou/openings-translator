@@ -14,6 +14,9 @@ public class OpeningsParserConfig {
 
 	private String searchId;
 
+	@NotNull
+	private String name;
+
 	@JsonProperty("url")
 	public String getUrl() {
 		return url;
@@ -42,5 +45,15 @@ public class OpeningsParserConfig {
 	@JsonProperty("searchId")
 	public void setSearchId(String searchId) {
 		this.searchId = searchId;
+	}
+
+	@JsonProperty("name")
+	public String getName() {
+		return name;
+	}
+
+	@JsonProperty("name")
+	public void setName(String name) {
+		this.name = name;
 	}
 }

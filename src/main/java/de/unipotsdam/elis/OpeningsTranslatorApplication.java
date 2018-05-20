@@ -8,6 +8,7 @@ import de.unipotsdam.elis.core.TimeRetriever;
 import de.unipotsdam.elis.health.OpeningPagesHealthCheck;
 import de.unipotsdam.elis.health.OpeningsClientFactoryHealtCheck;
 import de.unipotsdam.elis.health.OpeningsSourcesHealthCheck;
+import de.unipotsdam.elis.resources.ReadResource;
 import de.unipotsdam.elis.resources.UpdateResource;
 import io.dropwizard.Application;
 import io.dropwizard.client.JerseyClientBuilder;
@@ -34,11 +35,12 @@ public class OpeningsTranslatorApplication extends Application<OpeningsTranslato
 		Client client = new JerseyClientBuilder(environment).using(config.getJerseyClientConfiguration()).build(getName());
 		OpeningPagesClient pagesClient = new OpeningPagesClient(client);
 		TimeRetriever times = new TimeRetriever(pagesClient);
-		OpeningsClientFactory factory = new OpeningsClientFactory(config.getOpeningParsers(), client);
+		OpeningsClientFactory factory = new OpeningsClientFactory(client);
 
 		environment.jersey().register(new UpdateResource(times));
+		environment.jersey().register(new ReadResource(factory, config.getOpeningParsers()));
 		environment.healthChecks().register("opening-pages", new OpeningPagesHealthCheck(pagesClient));
-		environment.healthChecks().register("openings-client-factory", new OpeningsClientFactoryHealtCheck(factory));
+		environment.healthChecks().register("openings-client-factory", new OpeningsClientFactoryHealtCheck(factory, config.getOpeningParsers()));
 		environment.healthChecks().register("openings-sources", new OpeningsSourcesHealthCheck(client, config.getOpeningParsers()));
 	}
 }

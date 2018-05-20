@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.ws.rs.client.Client;
 
@@ -13,26 +12,20 @@ import de.unipotsdam.elis.client.OpeningsPageClient;
 
 public class OpeningsClientFactory {
 
-	private final List<OpeningsParserConfig> config;
 	private Client restClient;
 
-	public OpeningsClientFactory(List<OpeningsParserConfig> config, Client restClient) {
-		this.config = config;
+	public OpeningsClientFactory(Client restClient) {
 		this.restClient = restClient;
 	}
 
-	public OpeningsPageClient createForUrl(String url) throws ClientCreationException {
-		Optional<OpeningsParserConfig> result = config.stream().filter(c -> c.getUrl().equals(url)).findFirst();
-		if (!result.isPresent()) {
-			throw new ClientCreationException("Could not find matching config entry for URL " + url);
-		}
-		return createClient(restClient, result.get());
+	public OpeningsPageClient createFor(OpeningsParserConfig config) throws ClientCreationException {
+		return createClient(restClient, config);
 	}
 
-	public int createAll() throws ClientCreationException {
-		ArrayList<OpeningsPageClient> result = new ArrayList<>(config.size());
-		for (OpeningsParserConfig c : config) {
-			result.add(createClient(restClient, c));
+	public int createAll(List<OpeningsParserConfig> configs) throws ClientCreationException {
+		ArrayList<OpeningsPageClient> result = new ArrayList<>(configs.size());
+		for (OpeningsParserConfig config : configs) {
+			result.add(createClient(restClient, config));
 		}
 		return result.size();
 	}
