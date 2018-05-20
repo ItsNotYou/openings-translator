@@ -3,11 +3,29 @@ logging:
   loggers:
     de.unipotsdam.elis: DEBUG
 jerseyClient:
-  timeout: 2000ms
+  timeout: 5000ms
 openingParsers:
-  - url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
+  - name: Mensa Am Neuen Palais
+    url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
     className: de.unipotsdam.elis.client.CanteenClient
     searchId: c1063
-  - url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
+  - name: Cafeteria Am Neuen Palais
+    url: http://www.studentenwerk-potsdam.de/mensa-am-neuen-palais.html
     className: de.unipotsdam.elis.client.CanteenClient
     searchId: c1064
+  - name: Mensa Golm
+    url: http://www.studentenwerk-potsdam.de/de/mensa-golm.html
+    className: de.unipotsdam.elis.client.CanteenClient
+    searchId: c1087
+  - name: Cafeteria im IKMZ
+    url: http://www.studentenwerk-potsdam.de/de/mensa-golm.html
+    className: de.unipotsdam.elis.client.CanteenClient
+    searchId: c13285
+  - name: Mensa Griebnitzsee
+    url: http://www.studentenwerk-potsdam.de/de/mensa-griebnitzsee.html
+    className: de.unipotsdam.elis.client.CanteenClient
+    searchId: c1092
+  - name: Kaffeebar "Die Bohne"
+    url: http://www.studentenwerk-potsdam.de/de/mensa-griebnitzsee.html
+    className: de.unipotsdam.elis.client.CanteenClient
+    searchId: c8005
