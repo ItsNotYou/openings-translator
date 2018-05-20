@@ -53,7 +53,7 @@ public class CanteenClient implements OpeningsPageClient {
 			e.printStackTrace();
 		}
 
-		return buffer.toString().trim();
+		return buffer.toString().replace("&nbsp;", "").trim();
 	}
 
 	/**
