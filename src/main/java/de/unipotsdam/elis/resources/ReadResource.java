@@ -20,6 +20,8 @@ import de.unipotsdam.elis.OpeningsParserConfig;
 import de.unipotsdam.elis.client.OpeningsPageClient;
 import de.unipotsdam.elis.core.ClientCreationException;
 import de.unipotsdam.elis.core.OpeningsClientFactory;
+import de.unipotsdam.elis.core.OpeningsTranslator;
+import de.unipotsdam.elis.core.UnknownFormatException;
 
 @Path("/openings")
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf8")
@@ -27,10 +29,12 @@ public class ReadResource {
 
 	private OpeningsClientFactory factory;
 	private List<OpeningsParserConfig> configs;
+	private OpeningsTranslator translator;
 
-	public ReadResource(OpeningsClientFactory factory, List<OpeningsParserConfig> configs) {
+	public ReadResource(OpeningsClientFactory factory, List<OpeningsParserConfig> configs, OpeningsTranslator translator) {
 		this.factory = factory;
 		this.configs = configs;
+		this.translator = translator;
 	}
 
 	@GET
@@ -43,19 +47,25 @@ public class ReadResource {
 	@Timed
 	@Path("/{name}")
 	public String readOpenings(@PathParam("name") @NotEmpty String name) {
+		// Select chosen configuration
 		Optional<OpeningsParserConfig> result = configs.stream().filter(x -> x.getName().equals(name)).findFirst();
 		if (!result.isPresent()) {
 			throw new WebApplicationException("Name not found", 404);
 		}
 
 		try {
-			OpeningsParserConfig config = result.get();
-			OpeningsPageClient client = factory.createFor(config);
-			return client.readOpeningLines();
+			// Create client
+			OpeningsPageClient client = factory.createFor(result.get());
+			// Read raw content
+			String rawLines = client.readOpeningLines();
+			// Translate raw content
+			return translator.translate(rawLines);
 		} catch (ClientCreationException e) {
 			throw new WebApplicationException("Could not create client", 500);
 		} catch (IOException e) {
 			throw new WebApplicationException("Could not read openings", 500);
+		} catch (UnknownFormatException e) {
+			throw new WebApplicationException("Could not translate openings", 500);
 		}
 	}
 }
