@@ -19,7 +19,7 @@ TIME_DIGIT : [0-9] [0-9] ;
 COLON      : ':' ;
 POINT      : '.' ;
 HYPHEN     : '-' ;
-LB         : '\n' ;
+LB         : '\n' | '\r\n' ;
 
 DAY :
 	'Mo'('ntag' | 'nday')? |
